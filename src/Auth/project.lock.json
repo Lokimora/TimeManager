@@ -3,6 +3,13 @@
   "version": 2,
   "targets": {
     "DNX,Version=v4.5.1": {
+      "Mongo/1.0.0": {
+        "type": "project",
+        "framework": "DNX,Version=v4.5.1",
+        "dependencies": {
+          "MongoDB.Driver": "2.2.3"
+        }
+      },
       "MongoDB.Bson/2.2.3": {
         "type": "package",
         "compile": {
@@ -39,6 +46,13 @@
       }
     },
     "DNX,Version=v4.5.1/win7-x86": {
+      "Mongo/1.0.0": {
+        "type": "project",
+        "framework": "DNX,Version=v4.5.1",
+        "dependencies": {
+          "MongoDB.Driver": "2.2.3"
+        }
+      },
       "MongoDB.Bson/2.2.3": {
         "type": "package",
         "compile": {
@@ -75,6 +89,13 @@
       }
     },
     "DNX,Version=v4.5.1/win7-x64": {
+      "Mongo/1.0.0": {
+        "type": "project",
+        "framework": "DNX,Version=v4.5.1",
+        "dependencies": {
+          "MongoDB.Driver": "2.2.3"
+        }
+      },
       "MongoDB.Bson/2.2.3": {
         "type": "package",
         "compile": {
@@ -112,6 +133,10 @@
     }
   },
   "libraries": {
+    "Mongo/1.0.0": {
+      "type": "project",
+      "path": "../Mongo/project.json"
+    },
     "MongoDB.Bson/2.2.3": {
       "type": "package",
       "sha512": "AwxyD8qYgy1GQkxQV2uMzymm19QwaNNAER6gf/w8f2dDjcboEve1kv9GEz7mtn2K8p6hYQjhgnvGc+xeh0KLmg==",
@@ -150,6 +175,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
+      "Mongo >= 1.0.0-*",
       "MongoDB.Driver >= 2.2.3"
     ],
     "DNX,Version=v4.5.1": []

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Mongo.Helpers;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -19,45 +21,90 @@ namespace Mongo
         {
             _db = db;
 
+            var collectioName = typeof (T).Name;
 
-
-            var collection = _db.Database.GetCollection<T>(nameof(T));
+            var collection = _db.Database.GetCollection<T>(collectioName);
 
             if (collection == null)
             {
-                _db.Database.CreateCollection(nameof(T), new CreateCollectionOptions());
+                _db.Database.CreateCollection(collectioName, new CreateCollectionOptions());
             }
 
-            _collection = _db.Database.GetCollection<T>(nameof(T));
+            _collection = _db.Database.GetCollection<T>(collectioName);
 
         }
 
+        #region AsyncMethods
 
-        public async Task Insert(T t)
+        public async Task InsertAsync(T t)
         {
             await _collection.InsertOneAsync(t);
         }
 
-        public async Task Update(T t)
+        public async Task UpdateAsync(T t, params Expression<Func<T, object>>[] fields)
         {
-            FilterDefinition<T> filter = new ObjectFilterDefinition<T>(t);
+            var filterBuilder = Builders<T>.Filter;
+            var filter = filterBuilder.Eq(p => p.Id, t.Id);
 
-            UpdateDefinition<T> update = new ObjectUpdateDefinition<T>(t);
+            var update = Builders<T>.Update.Combine(fields.Select(p =>
+            {
+                var value = p.Compile().Invoke(t);
+
+                return Builders<T>.Update.Set(p.GetPropertyName(), value);
+
+            }));
 
             await _collection.UpdateOneAsync(filter, update);
         }
 
-        public async Task<T> FindOne(ObjectId id)
+        public async Task<T> FindOneAsync(ObjectId id)
         {
-            var cursor = await _collection.FindAsync(new ObjectFilterDefinition<T>(new T() { Id = id }));
+            var filterBuilder = Builders<T>.Filter;
+            var filter = filterBuilder.Eq(p => p.Id, id);
+
+            var cursor = await _collection.FindAsync(filter);
 
             return await cursor.FirstAsync();
         }
 
-        public async Task Delete(ObjectId id)
+        public async Task DeleteAsync(ObjectId id)
         {
-            await _collection.FindOneAndDeleteAsync(new ObjectFilterDefinition<T>(new T() { Id = id }));
+            var filterBuilder = Builders<T>.Filter;
+            var filter = filterBuilder.Eq(p => p.Id, id);
+
+            await _collection.FindOneAndDeleteAsync(filter);
         }
+
+        #endregion
+
+        #region SyncMethods
+
+        public void Insert(T t)
+        {
+            _collection.InsertOne(t);
+        }
+
+        public void Update(T t, params Expression<Func<T, object>>[] fields)
+        {
+            UpdateAsync(t, fields).RunSynchronously();
+        }
+
+        public T FindOne(ObjectId id)
+        {
+            return FindOneAsync(id).Result;
+        }
+
+        public void Delete(ObjectId id)
+        {
+            DeleteAsync(id).RunSynchronously();
+        }
+
+        #endregion
+
+
+
+
+
 
 
 

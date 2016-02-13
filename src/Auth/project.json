@@ -9,6 +9,7 @@
     "dnx451": { }
   },
   "dependencies": {
+    "Mongo": "1.0.0-*",
     "MongoDB.Driver": "2.2.3"
   }
 }

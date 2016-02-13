@@ -27,7 +27,7 @@ namespace TimeManager
             services.AddMvc();
             services.AddRouting();
             services.AddLogging();
-            services.AddSingleton<LocalDb>(p => new LocalDb(Configuration.Get("Database:TimeManagerDb")));
+            services.AddSingleton<LocalDb>(p => new LocalDb(Configuration["Database:TimeManagerDb"]));
 
             var builder = services.BuildServiceProvider();
 
@@ -48,23 +48,14 @@ namespace TimeManager
             Configuration = configBuilder.Build();
 
             app.UseIISPlatformHandler();
-
             app.UseDeveloperExceptionPage();
-
             app.UseMvcWithDefaultRoute();
-
 
 
             app.Run(async (context) =>
             {
                 await context.Response.WriteAsync("Hello World!");
             });
-        }
-
-
-        private void BuildConfig()
-        {
-
         }
 
         // Entry point for the application.

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mongo;
 using MongoDB.Bson;
 
 namespace Auth.Model
 {
-    public class User
+    public class User : PrimaryKeyModel
     {
-        public ObjectId Id { get; set; }
 
         public string Email { get; set; }
 
