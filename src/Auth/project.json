@@ -1,0 +1,14 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "Auth Class Library",
+  "authors": [ "lokimora" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+  "frameworks": {
+    "dnx451": { }
+  },
+  "dependencies": {
+    "MongoDB.Driver": "2.2.3"
+  }
+}
