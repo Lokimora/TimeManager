@@ -22,5 +22,15 @@ namespace Auth.Helper
         {
             return String.Equals(ComputeSHA(str, key), hash, StringComparison.OrdinalIgnoreCase);
         }
+
+        public static string MD5(string str)
+        {
+            
+        }
+
+        public static bool VerifyMd5(string str, string hash)
+        {
+            return  String.Equals(MD5(str), hash, StringComparison.OrdinalIgnoreCase);
+        }
     }
 }

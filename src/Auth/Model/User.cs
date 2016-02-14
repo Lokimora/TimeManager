@@ -18,6 +18,11 @@ namespace Auth.Model
 
         public string Salt { get; set; }
 
+        /// <summary>
+        /// Подтвердил ли пользователь свою учетную запись
+        /// </summary>
+        public bool IsConfirm { get; set; } 
+
         public DateTime Registration { get; set; }
 
     }

@@ -28,7 +28,7 @@ namespace TimeManager.Controllers
                 Time = DateTime.Now
             };
 
-            await _testCollection.Insert(testMod);
+            await _testCollection.InsertAsync(testMod);
 
             return new EmptyResult();
         }

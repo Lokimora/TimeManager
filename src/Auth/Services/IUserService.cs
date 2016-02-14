@@ -10,14 +10,16 @@ namespace Auth.Services
 {
     public interface IUserService
     {
-        User GetById(ObjectId id);
+        Task<User> GetByIdAsync(ObjectId id);
 
-        User GetByEmail(string email);
+        Task<User> GetByEmailAsync(string email);
 
-        bool IsExist(string email);
+        Task<bool> IsExistAsync(string email);
 
-        void Create(User user);
+        Task CreateAsync(User user);
 
-        void Update(User user, params Expression<Func<User, object>>[] fields);
+        Task UpdateAsync(User user, params Expression<Func<User, object>>[] fields);
+
+        
     }
 }

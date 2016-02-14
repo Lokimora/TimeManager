@@ -43,8 +43,7 @@ namespace Mongo
 
         public async Task UpdateAsync(T t, params Expression<Func<T, object>>[] fields)
         {
-            var filterBuilder = Builders<T>.Filter;
-            var filter = filterBuilder.Eq(p => p.Id, t.Id);
+            var filter = Builders<T>.Filter.Eq(p => p.Id, t.Id); ;
 
             var update = Builders<T>.Update.Combine(fields.Select(p =>
             {
@@ -57,21 +56,40 @@ namespace Mongo
             await _collection.UpdateOneAsync(filter, update);
         }
 
+        public async Task UpdateAsync(T t)
+        {
+            var filter = Builders<T>.Filter.Eq(p => p.Id, t.Id);
+            await _collection.ReplaceOneAsync(filter, t);
+        }
+
         public async Task<T> FindOneAsync(ObjectId id)
         {
-            var filterBuilder = Builders<T>.Filter;
-            var filter = filterBuilder.Eq(p => p.Id, id);
-
+            var filter = Builders<T>.Filter.Eq(p => p.Id, id); ;
             var cursor = await _collection.FindAsync(filter);
 
             return await cursor.FirstAsync();
         }
 
+        public async Task<List<T>> FindByConditionAsync(Expression<Func<T, bool>> condition)
+        {
+            var filter = Builders<T>.Filter.Where(condition);
+            var cursor = await _collection.FindAsync(filter);
+
+            return await cursor.ToListAsync();
+        }
+
+        public async Task<T> FindOneByConditionAsync(Expression<Func<T, bool>> condition)
+        {
+            var filter = Builders<T>.Filter.Where(condition);
+            var cursor = await _collection.FindAsync(filter);
+
+            return await cursor.FirstOrDefaultAsync();
+        }
+
         public async Task DeleteAsync(ObjectId id)
         {
-            var filterBuilder = Builders<T>.Filter;
-            var filter = filterBuilder.Eq(p => p.Id, id);
-
+            var filter = Builders<T>.Filter.Eq(p => p.Id, id); ;
+        
             await _collection.FindOneAndDeleteAsync(filter);
         }
 
@@ -88,11 +106,27 @@ namespace Mongo
         {
             UpdateAsync(t, fields).RunSynchronously();
         }
+        
+        public void Update(T t)
+        {
+            UpdateAsync(t).RunSynchronously();
+        }
 
         public T FindOne(ObjectId id)
         {
             return FindOneAsync(id).Result;
         }
+
+        public List<T> FindByCondition(Expression<Func<T, bool>> condition)
+        {
+            return FindByConditionAsync(condition).Result;
+        }
+
+        public T FindOneByCondition(Expression<Func<T, bool>> condition)
+        {
+            return FindOneByConditionAsync(condition).Result;
+        }
+
 
         public void Delete(ObjectId id)
         {

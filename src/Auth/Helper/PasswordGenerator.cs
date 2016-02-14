@@ -13,10 +13,8 @@ namespace Auth.Helper
         /// </summary>
         /// <param name="password"></param>
         /// <returns></returns>
-        public static string HashPassword(string password)
+        public static string HashPassword(string password, string salt)
         {
-            var salt = SaltGenerator.GenerateSalt(15);
-
             return HashGenerator.ComputeSHA(password, salt);
         }
 

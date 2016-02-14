@@ -18,29 +18,34 @@ namespace Auth.Services
             _userCollection = userCollection;
         }
 
-        public async User GetById(ObjectId id)
+        public async Task<User> GetByIdAsync(ObjectId id)
         {
-            return _userCollection.FindOne(id);
+            return await _userCollection.FindOneAsync(id);
         }
 
-        public User GetByEmail(string email)
+        public async Task<User> GetByEmailAsync(string email)
         {
-            throw new NotImplementedException();
+            return await _userCollection.FindOneByConditionAsync(p => p.Email == email);
         }
 
-        public bool IsExist(string email)
+        public async Task<bool> IsExistAsync(string email)
         {
-            throw new NotImplementedException();
+            var user = await _userCollection.FindOneByConditionAsync(p => p.Email == email);
+
+            if (user != null)
+                return true;
+
+            return false;
         }
 
-        public void Create(User user)
+        public async Task CreateAsync(User user)
         {
-            throw new NotImplementedException();
+            await _userCollection.InsertAsync(user);
         }
 
-        public void Update(User user, params Expression<Func<User, object>>[] fields)
+        public async Task UpdateAsync(User user, params Expression<Func<User, object>>[] fields)
         {
-            throw new NotImplementedException();
+            await _userCollection.UpdateAsync(user, fields);
         }
     }
 }
