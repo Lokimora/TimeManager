@@ -23,6 +23,8 @@ namespace Auth.Model
         /// </summary>
         public bool IsConfirm { get; set; } 
 
+        public string ConfirmationHash { get; set; }
+
         public DateTime Registration { get; set; }
 
     }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Text.Encoding;
 
 namespace Auth.Helper
 {
@@ -23,14 +24,27 @@ namespace Auth.Helper
             return String.Equals(ComputeSHA(str, key), hash, StringComparison.OrdinalIgnoreCase);
         }
 
-        public static string MD5(string str)
+        public static string HashMD5(string str)
         {
-            
+            MD5 md5 = MD5.Create(str);
+
+            byte[] inputBytes = ASCII.GetBytes(str);
+
+            byte[] hash = md5.ComputeHash(inputBytes);
+
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < hash.Length; i++)
+            {
+                sb.Append(hash[i].ToString("X2"));
+            }
+
+            return sb.ToString();
         }
 
         public static bool VerifyMd5(string str, string hash)
         {
-            return  String.Equals(MD5(str), hash, StringComparison.OrdinalIgnoreCase);
+            return  string.Equals(HashMD5(str), hash, StringComparison.OrdinalIgnoreCase);
         }
     }
 }
