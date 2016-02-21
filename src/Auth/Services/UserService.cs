@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Auth.Helper;
 using Auth.Model;
 using Mongo;
 using MongoDB.Bson;
@@ -47,5 +48,7 @@ namespace Auth.Services
         {
             await _userCollection.UpdateAsync(user, fields);
         }
+
+
     }
 }

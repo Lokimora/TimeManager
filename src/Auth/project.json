@@ -1,4 +1,4 @@
-﻿{
+{
   "version": "1.0.0-*",
   "description": "Auth Class Library",
   "authors": [ "lokimora" ],
@@ -6,7 +6,12 @@
   "projectUrl": "",
   "licenseUrl": "",
   "frameworks": {
-    "dnx451": { }
+    "dnx451": {
+      "frameworkAssemblies": {
+        "System.Security": "4.0.0.0",
+        "System.Web": "4.0.0.0"
+      }
+    }
   },
   "dependencies": {
     "Mongo": "1.0.0-*",

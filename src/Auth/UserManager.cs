@@ -19,6 +19,17 @@ namespace Auth
             _userService = userService;
         }
 
+
+        public async Task<bool> ValidateUser(string email, string password)
+        {
+            var user = await _userService.GetByEmailAsync(email);
+
+            if (user == null)
+                return false;
+
+            return PasswordServie.ComparePassword(password, user.Password, user.Salt);
+        }
+
         public async Task<User> CreateUser(string email, string name, string password)
         {
             var existingUser = await _userService.GetByEmailAsync(email);

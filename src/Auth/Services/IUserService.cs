@@ -20,6 +20,7 @@ namespace Auth.Services
 
         Task UpdateAsync(User user, params Expression<Func<User, object>>[] fields);
 
-        
+
+
     }
 }

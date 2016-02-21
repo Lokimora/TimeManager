@@ -9,7 +9,11 @@
         "dependencies": {
           "Mongo": "1.0.0",
           "MongoDB.Driver": "2.2.3"
-        }
+        },
+        "frameworkAssemblies": [
+          "System.Security",
+          "System.Web"
+        ]
       },
       "Microsoft.AspNet.Antiforgery/1.0.0-rc1-final": {
         "type": "package",
@@ -1563,7 +1567,11 @@
         "dependencies": {
           "Mongo": "1.0.0",
           "MongoDB.Driver": "2.2.3"
-        }
+        },
+        "frameworkAssemblies": [
+          "System.Security",
+          "System.Web"
+        ]
       },
       "Microsoft.AspNet.Antiforgery/1.0.0-rc1-final": {
         "type": "package",
@@ -3120,7 +3128,11 @@
         "dependencies": {
           "Mongo": "1.0.0",
           "MongoDB.Driver": "2.2.3"
-        }
+        },
+        "frameworkAssemblies": [
+          "System.Security",
+          "System.Web"
+        ]
       },
       "Microsoft.AspNet.Antiforgery/1.0.0-rc1-final": {
         "type": "package",

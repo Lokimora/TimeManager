@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mongo;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Auth.Model
 {
     public class User : PrimaryKeyModel
     {
-
+        
         public string Email { get; set; }
 
         public string Name { get; set; }
@@ -25,6 +26,7 @@ namespace Auth.Model
 
         public string ConfirmationHash { get; set; }
 
+        [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime Registration { get; set; }
 
     }

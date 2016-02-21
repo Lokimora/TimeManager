@@ -178,6 +178,9 @@
       "Mongo >= 1.0.0-*",
       "MongoDB.Driver >= 2.2.3"
     ],
-    "DNX,Version=v4.5.1": []
+    "DNX,Version=v4.5.1": [
+      "fx/System.Security >= 4.0.0",
+      "fx/System.Web >= 4.0.0"
+    ]
   }
 }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Auth.Model;
+using Auth.Services;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
@@ -31,6 +33,9 @@ namespace TimeManager
 
             var builder = services.BuildServiceProvider();
 
+            services.AddTransient<IUserService, UserService>();
+
+            services.AddTransient(p => new DbCollection<User>(builder.GetService<LocalDb>()));
             services.AddTransient<DbCollection<TestModel>>(
                 p => new DbCollection<TestModel>(builder.GetService<LocalDb>()));
 
@@ -45,11 +50,15 @@ namespace TimeManager
             var configBuilder = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json");
 
+            
+
             Configuration = configBuilder.Build();
 
             app.UseIISPlatformHandler();
             app.UseDeveloperExceptionPage();
             app.UseMvcWithDefaultRoute();
+
+            
 
 
             app.Run(async (context) =>
