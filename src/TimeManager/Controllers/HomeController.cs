@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using Mongo;
 using TimeManager.Model;
@@ -10,27 +11,14 @@ using TimeManager.Model;
 
 namespace TimeManager.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
     {
-        private readonly DbCollection<TestModel> _testCollection;
-
-        public HomeController(DbCollection<TestModel> testCollection)
-        {
-            _testCollection = testCollection;
-        }
-
+        
         // GET: /<controller>/
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var testMod = new TestModel()
-            {
-                Name = "Hello World",
-                Time = DateTime.Now
-            };
-
-            await _testCollection.InsertAsync(testMod);
-
-            return new EmptyResult();
+            return View();
         }
     }
 }

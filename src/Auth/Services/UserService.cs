@@ -49,6 +49,14 @@ namespace Auth.Services
             await _userCollection.UpdateAsync(user, fields);
         }
 
+        public User GetById(ObjectId id)
+        {
+            return GetByIdAsync(id).Result;
+        }
 
+        public User GetByEmail(string email)
+        {
+            return GetByEmailAsync(email).Result;
+        }
     }
 }

@@ -26,20 +26,35 @@ namespace Auth.Helper
 
         public static string HashMD5(string str)
         {
-            MD5 md5 = MD5.Create(str);
 
-            byte[] inputBytes = ASCII.GetBytes(str);
 
-            byte[] hash = md5.ComputeHash(inputBytes);
-
-            StringBuilder sb = new StringBuilder();
-
-            for (int i = 0; i < hash.Length; i++)
+            using (MD5 md5 = MD5.Create())
             {
-                sb.Append(hash[i].ToString("X2"));
+                byte[] retVal = md5.ComputeHash(Encoding.Unicode.GetBytes(str));
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < retVal.Length; i++)
+                {
+                    sb.Append(retVal[i].ToString("X2"));
+                }
+                return sb.ToString();
             }
 
-            return sb.ToString();
+            
+
+            //MD5 md5 = MD5.Create(str);
+
+            //byte[] inputBytes = ASCII.GetBytes(str);
+
+            //byte[] hash = md5.ComputeHash(inputBytes);
+
+            //StringBuilder sb = new StringBuilder();
+
+            //for (int i = 0; i < hash.Length; i++)
+            //{
+            //    sb.Append(hash[i].ToString("X2"));
+            //}
+
+            //return sb.ToString();
         }
 
         public static bool VerifyMd5(string str, string hash)

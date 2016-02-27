@@ -2,14 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Auth;
 using Auth.Model;
 using Auth.Services;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
+using Microsoft.AspNet.Mvc.Controllers;
+using Microsoft.AspNet.Mvc.ViewComponents;
+using Microsoft.AspNet.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Mongo;
+using SimpleInjector;
+using SimpleInjector.Integration.AspNet;
 using TimeManager.Database;
 using TimeManager.Model;
 
@@ -17,6 +23,7 @@ namespace TimeManager
 {
     public class Startup
     {
+        private Container container = new Container();
 
         public IConfiguration Configuration { get; set; }
 
@@ -24,20 +31,13 @@ namespace TimeManager
         // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-
-
             services.AddMvc();
             services.AddRouting();
             services.AddLogging();
-            services.AddSingleton<LocalDb>(p => new LocalDb(Configuration["Database:TimeManagerDb"]));
+            services.AddAuthorization();
 
-            var builder = services.BuildServiceProvider();
-
-            services.AddTransient<IUserService, UserService>();
-
-            services.AddTransient(p => new DbCollection<User>(builder.GetService<LocalDb>()));
-            services.AddTransient<DbCollection<TestModel>>(
-                p => new DbCollection<TestModel>(builder.GetService<LocalDb>()));
+            services.AddInstance<IControllerActivator>(new SimpleInjectorControllerActivator(container));
+            services.AddInstance<IViewComponentInvokerFactory>(new SimpleInjectorViewComponentInvokerFactory(container));
 
         }
 
@@ -45,26 +45,70 @@ namespace TimeManager
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
 
-
-
             var configBuilder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json");
-
-            
+              .AddJsonFile("appsettings.json");
 
             Configuration = configBuilder.Build();
 
+            container.Options.DefaultScopedLifestyle = new AspNetRequestLifestyle();
+
+            app.UseSimpleInjectorAspNetRequestScoping(container);
+            
+            InitializeContainer(app);
+
+            container.RegisterAspNetControllers(app);
+
+            container.Verify();
+
+            app.UseCookieAuthentication(p =>
+            {
+                p.AuthenticationScheme = "CustomSheme";
+                p.LoginPath = "/login";
+                p.AutomaticAuthenticate = true;
+                p.AutomaticChallenge = true;
+            });
+
+            app.UseStaticFiles();
             app.UseIISPlatformHandler();
             app.UseDeveloperExceptionPage();
-            app.UseMvcWithDefaultRoute();
-
-            
+            app.UseMvc(ConfigureRoutes);
 
 
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World!");
-            });
+        }
+
+        private void ConfigureRoutes(IRouteBuilder routeBuilder)
+        {
+
+            routeBuilder.MapRoute(
+             name: "Home",
+             template: "",
+             defaults: new { controller = "Home", action = "Index" });
+
+
+            routeBuilder.MapRoute(
+                name: "registration",
+                template: "registration",
+                defaults: new {controller = "Registration", action = "Registration" });
+
+            routeBuilder.MapRoute(
+                name: "login",
+                template: "login",
+                defaults: new {controller = "Login", action = "Login"});
+
+            routeBuilder.MapRoute(
+                name: "default",
+                template: "{controller}/{action}");
+
+
+        }
+
+        private void InitializeContainer(IApplicationBuilder app)
+        {
+            container.RegisterSingleton(() => new LocalDb(Configuration["Database:TimeManagerDb"]));
+            container.Register<IUserService, UserService>();
+            container.Register(() => new UserManager(container.GetRequiredService<IUserService>()));
+            container.Register(() => new DbCollection<User>(container.GetService<LocalDb>()), Lifestyle.Transient);
+
         }
 
         // Entry point for the application.

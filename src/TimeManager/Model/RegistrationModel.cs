@@ -8,13 +8,14 @@ namespace TimeManager.Model
 {
     public class RegistrationModel
     {
-        [Required]
+        [Required(ErrorMessage = "Введите имя пользователя", AllowEmptyStrings = false)]
         public string Name { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Укажите вашу почту")]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Введите пароль")]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
     }
 }

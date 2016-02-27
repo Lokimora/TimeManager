@@ -13,7 +13,11 @@
     "Microsoft.AspNet.Mvc": "6.0.0-rc1-final",
     "Microsoft.AspNet.Html.Abstractions": "1.0.0-rc1-final",
     "Microsoft.AspNet.Cors": "6.0.0-rc1-final",
-    "Microsoft.AspNet.Diagnostics": "1.0.0-rc1-final"
+    "Microsoft.AspNet.StaticFiles": "1.0.0-rc1-final",
+    "Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-rc1-final",
+    "Microsoft.AspNet.Diagnostics": "1.0.0-rc1-final",
+    "SimpleInjector.Integration.AspNet": "3.1.2-beta4",
+    "Microsoft.AspNet.Authentication.Cookies": "1.0.0-rc1-final"
 
 
   },
@@ -25,6 +29,7 @@
   "frameworks": {
     "dnx451": {
       "frameworkAssemblies": {
+        "System.Web": "4.0.0.0",
         "System.Web.Abstractions": "4.0.0.0"
       }
     }

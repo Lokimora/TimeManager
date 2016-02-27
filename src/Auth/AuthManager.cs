@@ -9,13 +9,13 @@ namespace Auth
     public static class AuthManager
     {
         public static void Login(string userId)
-        {            
+        {                        
             FormsAuthentication.SetAuthCookie(userId, true);
         }
 
-        public static void Logoff()
+        public async static Task Logoff()
         {
-            FormsAuthentication.SignOut();
+            await Task.Run(() => FormsAuthentication.SignOut());
         }
     }
 }

@@ -32,19 +32,26 @@ namespace TimeManager.Controllers
         {
             return View();
         }
-
+        
+  
         [HttpPost]
         public async Task<IActionResult> Registration(RegistrationModel model)
         {
             if (await _userService.IsExistAsync(model.Email))
             {
                 ModelState.AddModelError("Email", "Email недоступен");
-                return View();
+                return View(model);
             }
 
-            await _userManager.CreateUser(model.Email, model.Name, model.Password);
+            if (ModelState.IsValid)
+            {
+                await _userManager.CreateUser(model.Email, model.Name, model.Password);
 
-            return RedirectToAction("login", "login", null);
+                return RedirectToAction("login", "login", null);
+            }
+                return View(model);
+
+          
 
         }
 

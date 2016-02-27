@@ -20,7 +20,12 @@ namespace Auth
         }
 
 
-        public async Task<bool> ValidateUser(string email, string password)
+        public bool ValidateUser(string email, string password)
+        {
+            return ValidateUserAsync(email, password).Result;
+        }
+
+        public async Task<bool> ValidateUserAsync(string email, string password)
         {
             var user = await _userService.GetByEmailAsync(email);
 
